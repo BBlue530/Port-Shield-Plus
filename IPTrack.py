@@ -16,15 +16,16 @@ def sniff_packets(packet):
 
             current_time = time.time()
 
-            ip_ports_accessed[ip].append((port, current_time))
+            ip_ports_accessed[ip] = {(p, t) for p, t in ip_ports_accessed[ip] if current_time - t <= TIME_GATE}
+            ip_ports_accessed[ip].add((port, current_time))
+            unique_ports = {p for p, _ in ip_ports_accessed[ip]}
 
-            ip_ports_accessed[ip] = [(ports, timestamp) for ports, timestamp in ip_ports_accessed[ip] if current_time - timestamp <= TIME_GATE]
-
-            if len(ip_ports_accessed[ip]) > PORTS_ACCESSED:
-                ports_attempted = ', '.join(map(str, [ports for ports, _ in ip_ports_accessed[ip]]))
-                print(f"IP: {ip} Accessed: {len(ip_ports_accessed[ip])} Ports in: {TIME_GATE} seconds. "
+            if len(unique_ports) > PORTS_ACCESSED:
+                ports_attempted = ', '.join(map(str, unique_ports))
+                print(f"IP: {ip} accessed {len(unique_ports)} unique ports in {TIME_GATE} seconds. "
                       f"Tried Ports: {ports_attempted}.")
-                log_message = (f"IP: {ip} Accessed: {len(ip_ports_accessed[ip])} Ports in: {TIME_GATE} seconds. "
+                
+                log_message = (f"IP: {ip} accessed {len(unique_ports)} unique ports in {TIME_GATE} seconds. "
                                f"Tried Ports: {ports_attempted}.")
                 logger(log_message, ip)
 
