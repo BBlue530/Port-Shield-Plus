@@ -8,7 +8,7 @@ import psutil
 import os
 from Variables import QUARANTINE
 from IPLogger import logger
-from Immutable import ensure_immutable, remove_immutable, apply_immutable, remove_directory_immutable, apply_directory_immutable
+from ProgramMonitoring.Immutable import ensure_immutable, remove_immutable, apply_immutable, remove_directory_immutable, apply_directory_immutable
 
 ###############################################################################################################
 

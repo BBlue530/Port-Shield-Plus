@@ -1,6 +1,6 @@
 from scapy.all import sniff
-from IPTrack import sniff_packets
-from MonitorSystem import start_monitoring
+from PortMonitoring.IPTrack import sniff_packets
+from ProgramMonitoring.MonitorSystem import start_monitoring
 import platform
 
 current_os = platform.system().lower()

@@ -4,7 +4,7 @@ import requests
 import threading
 from IPLogger import logger
 from Variables import requests_made, old_seen_programs, RATE_LIMIT, HEADERS, QUARANTINE
-from HandleBadProgram import calculate_file_hash, kill_program, quarantine_program
+from ProgramMonitoring.HandleBadProgram import calculate_file_hash, kill_program, quarantine_program
 
 if not os.path.exists(QUARANTINE):
     os.makedirs(QUARANTINE)
