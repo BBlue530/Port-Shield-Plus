@@ -23,6 +23,8 @@ def block_ip(ip):
 
     ip_last_blocked[ip] = current_time
 
+
+    # VVV Comment these lines out for block to be perma VVV
     time.sleep(BLOCK_DURATION)
 
     if current_os == 'linux':
