@@ -16,10 +16,12 @@ def block_ip(ip):
 
     if current_os == 'linux':
         os.system(f"sudo iptables -A INPUT -s {ip} -j DROP")
-        logger(f"Block IP: {ip} for: {BLOCK_DURATION} seconds.")
+        message = f"Block IP: {ip} for: {BLOCK_DURATION} seconds."
+        logger(message)
     elif current_os == 'windows':
         os.system(f"netsh advfirewall firewall add rule name='Block {ip}' dir=in interface=any action=block remoteip={ip}")
-        logger(f"Block IP: {ip} for: {BLOCK_DURATION} seconds.")
+        message = f"Block IP: {ip} for: {BLOCK_DURATION} seconds."
+        logger(message)
 
     ip_last_blocked[ip] = current_time
 
@@ -32,4 +34,5 @@ def block_ip(ip):
     elif current_os == 'windows':
         os.system(f"netsh advfirewall firewall delete rule name='Block {ip}'")
 
-    logger(f"Unblock IP: {ip} after: {BLOCK_DURATION} seconds.")
+    message = f"Unblock IP: {ip} after: {BLOCK_DURATION} seconds."
+    logger(message)

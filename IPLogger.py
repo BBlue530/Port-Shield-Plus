@@ -1,10 +1,10 @@
 import datetime
 from Variables import log_file
 
-def logger(message, ip, packet_type="TCP"):
+def logger(message):
     
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    log_entry = f"{timestamp} - {message} - {packet_type} - {ip}\n"
+    log_message = f"{timestamp} - {message}\n"
 
     with open(log_file, "a") as log:
-        log.write(log_entry)
+        log.write(log_message)

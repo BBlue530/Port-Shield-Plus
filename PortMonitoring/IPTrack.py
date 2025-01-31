@@ -2,7 +2,7 @@ from scapy.all import conf, sniff, IP, TCP
 import time
 from collections import defaultdict
 from Variables import ip_ports_accessed, PORTS_ACCESSED
-from IPBlocking import block_ip
+from PortMonitoring.IPBlocking import block_ip
 from IPLogger import logger
 
 ip_ports_accessed = defaultdict(list)
@@ -25,11 +25,12 @@ def sniff_packets(packet):
                 print(f"IP: {ip} accessed {len(unique_ports)} unique ports in {TIME_GATE} seconds. "
                       f"Tried Ports: {ports_attempted}.")
                 
-                log_message = (f"IP: {ip} accessed {len(unique_ports)} unique ports in {TIME_GATE} seconds. "
-                               f"Tried Ports: {ports_attempted}.")
-                logger(log_message, ip)
+                message = (f"IP: {ip} accessed {len(unique_ports)} unique ports in {TIME_GATE} seconds. "
+                           f"Tried Ports: {ports_attempted}.")
+                logger(message)
 
                 block_ip(ip)
 
     except Exception as e:
-        logger(f"Error: {e}", ip="unknown")
+        message = f"Error: {e}"
+        logger(message)

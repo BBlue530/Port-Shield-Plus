@@ -18,11 +18,13 @@ def kill_program(path_to_program):
             if proc.info['exe'] and os.path.samefile(proc.info['exe'], path_to_program):
                 proc.kill()
                 print(f"Killed PID {proc.info['pid']} program: {path_to_program}")
-                logger(f"Killed PID {proc.info['pid']} program: {path_to_program}")
+                message = f"Killed PID {proc.info['pid']} program: {path_to_program}"
+                logger(message)
                 return
     except Exception as e:
         print(f"[WARNING] ERROR KILLING: {path_to_program}: {e}")
-        logger(f"[WARNING] ERROR KILLING: {path_to_program}: {e}")
+        message = f"[WARNING] ERROR KILLING: {path_to_program}: {e}"
+        logger(message)
 
 ###############################################################################################################
 
@@ -49,14 +51,16 @@ def quarantine_program(path_to_program):
         apply_directory_immutable(quarantined_path_to_program)
 
         print(f"Moved program: {path_to_program} to {quarantined_path_to_program}")
-        logger(f"Moved program: {path_to_program} to {quarantined_path_to_program}")
+        message = f"Moved program: {path_to_program} to {quarantined_path_to_program}"
+        logger(message)
         
         ensure_immutable(quarantined_path_to_program)
         ensure_immutable(QUARANTINE)
 
     except Exception as e:
         print(f"[WARNING] ERROR QUARANTINING PROGRAM: {path_to_program}: {e}")
-        logger(f"[WARNING] ERROR QUARANTINING PROGRAM: {path_to_program}: {e}")
+        message = f"[WARNING] ERROR QUARANTINING PROGRAM: {path_to_program}: {e}"
+        logger(message)
 
 ###############################################################################################################
 
@@ -69,7 +73,8 @@ def calculate_file_hash(path_to_program):
         return sha256_hash.hexdigest()
     except Exception as e:
         print(f"Error Hash: {path_to_program}: {e}")
-        logger(f"Error Hash: {path_to_program}: {e}")
+        message = f"Error Hash: {path_to_program}: {e}"
+        logger(message)
         return None
     
 ###############################################################################################################
@@ -85,8 +90,11 @@ def secure_quarantine_folder():
 def check_quarantine_integrity(current_hash, stored_hash):
     if current_hash != stored_hash:
         print(f"[ALERT] Integrity check failed for {current_hash}.")
-        logger(f"[ALERT] Integrity check failed for {current_hash}.")
-        # Optional: Trigger additional security measures, e.g., send alert, lock file, etc.
+        message = f"[ALERT] Integrity check failed for {current_hash}."
+        logger(message)
+        # Current plan: Kill any processes associated with the compromised file, encrypt the backup files, securely 
+        # transfer them off the local machine, remove the program responsible for the alert and contact the owner 
+        # of the machine. These measures will be the final line of defense and hopefully ensure the systems security.
 
 ###############################################################################################################
 
@@ -107,14 +115,16 @@ def load_encryption_key():
             return key
     except Exception as e:
         print(f"Error: {e}")
-        logger(f"Error: {e}")
+        message = f"Error: {e}"
+        logger(message)
         return None
 
 ENCRYPTION_KEY = load_encryption_key()
 
 if ENCRYPTION_KEY is None:
     print("Error: Encryption Key")
-    logger("Error: Encryption Key")
+    message = "Error: Encryption Key"
+    logger(message)
     exit(1)
 
 cipher = Fernet(ENCRYPTION_KEY)
