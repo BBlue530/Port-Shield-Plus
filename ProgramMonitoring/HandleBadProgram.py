@@ -1,5 +1,4 @@
 import pwd
-import subprocess
 from cryptography.fernet import Fernet
 import hashlib
 from datetime import datetime
@@ -8,7 +7,8 @@ import psutil
 import os
 from Variables import QUARANTINE
 from IPLogger import logger
-from ProgramMonitoring.Immutable import ensure_immutable, remove_immutable, apply_immutable, remove_directory_immutable, apply_directory_immutable
+from ProgramMonitoring.Immutable import ensure_immutable, remove_directory_immutable, apply_directory_immutable
+from SecurityChecks.MonitorSecurity import check_quarantine_integrity
 
 ###############################################################################################################
 
@@ -45,7 +45,7 @@ def quarantine_program(path_to_program):
         remove_directory_immutable(quarantined_path_to_program)
         shutil.move(path_to_program, quarantined_path_to_program)
         current_hash = calculate_file_hash(quarantined_path_to_program)
-        check_quarantine_integrity(current_hash, stored_hash)
+        check_quarantine_integrity(current_hash, stored_hash, path_to_program)
         encrypt_file(quarantined_path_to_program, ENCRYPTION_KEY)
         os.chmod(quarantined_path_to_program, 0o000)
         apply_directory_immutable(quarantined_path_to_program)
@@ -79,22 +79,12 @@ def calculate_file_hash(path_to_program):
     
 ###############################################################################################################
 
-
 def secure_quarantine_folder():
 
     # Non executable directory
     os.chmod(QUARANTINE, 0o655)
     # Change ownership
     os.chown(QUARANTINE, pwd.getpwnam('nobody').pw_uid, -1)
-
-def check_quarantine_integrity(current_hash, stored_hash):
-    if current_hash != stored_hash:
-        print(f"[ALERT] Integrity check failed for {current_hash}.")
-        message = f"[ALERT] Integrity check failed for {current_hash}."
-        logger(message)
-        # Current plan: Kill any processes associated with the compromised file, encrypt the backup files, securely 
-        # transfer them off the local machine, remove the program responsible for the alert and contact the owner 
-        # of the machine. These measures will be the final line of defense and hopefully ensure the systems security.
 
 ###############################################################################################################
 

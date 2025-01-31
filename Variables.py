@@ -13,6 +13,10 @@ RATE_LIMIT = 3
 
 QUARANTINE = "/Quarantine"
 
+BACKUP_FILES ="/Backup"
+
+BACKUP_KEY = "backup_key.key"
+
 requests_made = deque()
 
 ip_ports_accessed = defaultdict(set)
@@ -20,3 +24,5 @@ ip_ports_accessed = defaultdict(set)
 log_file = "Port_Shield.txt"
 
 old_seen_programs = set()
+
+owner_email = "bb3250577@gmail.com"

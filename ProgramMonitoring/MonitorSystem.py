@@ -6,7 +6,7 @@ from IPLogger import logger
 from Variables import requests_made, old_seen_programs, RATE_LIMIT, HEADERS, QUARANTINE
 from ProgramMonitoring.HandleBadProgram import calculate_file_hash, kill_program, quarantine_program
 from PerformanceMonitor import start_timer, check_timer
-from SubmitAndScan import check_scan_status, submit_file_for_scan
+from ProgramMonitoring.SubmitAndScan import check_scan_status, submit_file_for_scan
 
 if not os.path.exists(QUARANTINE):
     os.makedirs(QUARANTINE)
