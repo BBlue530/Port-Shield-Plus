@@ -41,7 +41,7 @@ def check_scan_status(analysis_id, path_to_program):
                 else:
                     print(f"Retrying Scan: {path_to_program}")
                     retries += 1
-                    time.sleep(30)
+                    time.sleep(60)
             else:
                 print(f"Error scan status: {response.status_code}")
                 message = f"Error scan status: {path_to_program}: {response.status_code}"

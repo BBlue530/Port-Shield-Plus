@@ -8,12 +8,15 @@ from Variables import BACKUP_FILES, BACKUP_KEY, owner_email
 
 ###############################################################################################################
 
-def last_line_defense(path_to_program):
+def last_line_defense(program):
+    print(f"LAST LINE OF DEFENSE TRIGGERED: CAUSE: {program}")
+    message = f"LAST LINE OF DEFENSE TRIGGERED: CAUSE: {program}"
+    logger(message)
     from ProgramMonitoring.HandleBadProgram import kill_program
     encrypt_backup_files(BACKUP_KEY)
-    remove_compromised_program(path_to_program)
+    remove_compromised_program(program)
     alert_owner(owner_email)
-    kill_program(path_to_program)
+    kill_program(program)
     disable_network()
     lockdown_bios()
 
@@ -58,16 +61,16 @@ BACKUP_KEY = load_BACKUP_KEY()
 
 ###############################################################################################################
 
-def remove_compromised_program(path_to_program):
+def remove_compromised_program(program):
     try:
-        remove_immutable(path_to_program)
-        os.remove(path_to_program)
-        print(f"Removed program: {path_to_program}")
-        message = f"Removed program: {path_to_program}"
+        remove_immutable(program)
+        os.remove(program)
+        print(f"Removed program: {program}")
+        message = f"Removed program: {program}"
         logger(message)
     except Exception as e:
-        print(f"[WARNING] Failed to remove program {path_to_program}: {e}")
-        logger(f"[WARNING] Failed to remove program {path_to_program}: {e}")
+        print(f"[WARNING] Failed to remove program {program}: {e}")
+        logger(f"[WARNING] Failed to remove program {program}: {e}")
 
 ###############################################################################################################
 

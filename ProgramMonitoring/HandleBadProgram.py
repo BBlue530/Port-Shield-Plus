@@ -5,10 +5,12 @@ from datetime import datetime
 import shutil
 import psutil
 import os
+import signal
+import time
 from Variables import QUARANTINE
 from IPLogger import logger
-from ProgramMonitoring.Immutable import ensure_immutable, remove_directory_immutable, apply_directory_immutable
-from SecurityChecks.MonitorSecurity import check_quarantine_integrity
+from ProgramMonitoring.Immutable import remove_directory_immutable, apply_directory_immutable
+from SecurityChecks.MonitorSecurity import check_quarantine_integrity, pid_still_running, encryption_check, quarantine_check, ensure_immutable, permissionns_check
 
 ###############################################################################################################
 
@@ -17,13 +19,42 @@ def kill_program(path_to_program):
         for proc in psutil.process_iter(['pid', 'name', 'exe']):
             if proc.info['exe'] and os.path.samefile(proc.info['exe'], path_to_program):
                 proc.kill()
+                pid = proc.info['pid']
+
                 print(f"Killed PID {proc.info['pid']} program: {path_to_program}")
                 message = f"Killed PID {proc.info['pid']} program: {path_to_program}"
                 logger(message)
+                time.sleep(5)
+
+                if psutil.pid_exists(pid):
+                    message = f"WARNING: {pid} Running"
+                    logger(message)
+                    force_kill(pid, path_to_program)
+
                 return
     except Exception as e:
-        print(f"[WARNING] ERROR KILLING: {path_to_program}: {e}")
-        message = f"[WARNING] ERROR KILLING: {path_to_program}: {e}"
+        print(f"WARNING ERROR KILLING: {path_to_program}: {e}")
+        message = f"WARNING ERROR KILLING: {path_to_program}: {e}"
+        logger(message)
+
+def force_kill(pid, path_to_program):
+    try:
+
+        if os.name == "nt":
+            proc = psutil.Process(pid)
+            proc.terminate()
+        else:
+            os.kill(pid, signal.SIGKILL)
+        
+        if psutil.pid_exists(pid):
+            pid_still_running(pid, path_to_program)
+
+        else:
+            message = f"Forcefully killed PID {pid}"
+            logger(message)
+
+    except Exception as e:
+        message = f"ERROR Force Kill Failed: {pid}: {e}"
         logger(message)
 
 ###############################################################################################################
@@ -42,24 +73,34 @@ def quarantine_program(path_to_program):
         quarantined_file_name = f"{timestamp}_{os.path.basename(path_to_program)}"
         quarantined_path_to_program = os.path.join(QUARANTINE, quarantined_file_name)
         
-        remove_directory_immutable(quarantined_path_to_program)
+        remove_directory_immutable(QUARANTINE)
         shutil.move(path_to_program, quarantined_path_to_program)
         current_hash = calculate_file_hash(quarantined_path_to_program)
         check_quarantine_integrity(current_hash, stored_hash, path_to_program)
+
         encrypt_file(quarantined_path_to_program, ENCRYPTION_KEY)
-        os.chmod(quarantined_path_to_program, 0o000)
-        apply_directory_immutable(quarantined_path_to_program)
+        encryption_check(quarantined_path_to_program, stored_hash)
+
+        apply_directory_immutable(QUARANTINE)
+        ensure_immutable(quarantined_path_to_program)
+        ensure_immutable(QUARANTINE)
 
         print(f"Moved program: {path_to_program} to {quarantined_path_to_program}")
         message = f"Moved program: {path_to_program} to {quarantined_path_to_program}"
         logger(message)
-        
-        ensure_immutable(quarantined_path_to_program)
-        ensure_immutable(QUARANTINE)
+
+        os.chmod(quarantined_path_to_program, 0o000) # Gotta make it make everything inside the folder of the program read only. So ill prolly end up making it make a folder that puts it in quarantine
+        permissionns_check(quarantined_path_to_program)
+
+        quarantine_check()
+
+        print(f"Quarantine Of: {quarantined_path_to_program} Worked.")
+        message = f"Quarantine Of: {quarantined_path_to_program} Worked."
+        logger(message)
 
     except Exception as e:
-        print(f"[WARNING] ERROR QUARANTINING PROGRAM: {path_to_program}: {e}")
-        message = f"[WARNING] ERROR QUARANTINING PROGRAM: {path_to_program}: {e}"
+        print(f"WARNING ERROR QUARANTINING PROGRAM: {path_to_program}: {e}")
+        message = f"WARNING ERROR QUARANTINING PROGRAM: {path_to_program}: {e}"
         logger(message)
 
 ###############################################################################################################
@@ -82,7 +123,7 @@ def calculate_file_hash(path_to_program):
 def secure_quarantine_folder():
 
     # Non executable directory
-    os.chmod(QUARANTINE, 0o655)
+    os.chmod(QUARANTINE, 0o333)
     # Change ownership
     os.chown(QUARANTINE, pwd.getpwnam('nobody').pw_uid, -1)
 
@@ -118,5 +159,8 @@ if ENCRYPTION_KEY is None:
     exit(1)
 
 cipher = Fernet(ENCRYPTION_KEY)
+
+def encrypt_file_failed(quarantined_path_to_program):
+    encrypt_file(quarantined_path_to_program)
 
 ###############################################################################################################

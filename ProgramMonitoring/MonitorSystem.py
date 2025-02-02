@@ -51,7 +51,7 @@ def scan_program_with_virustotal(path_to_program):
 
                 if analysis_id:
                     print(f"File {path_to_program} uploaded. Waiting for scan to complete...")
-                    time.sleep(30)
+                    time.sleep(60)
                     check_scan_status(analysis_id, path_to_program)
                 return
 
@@ -130,7 +130,7 @@ def monitor_system():
             if quarantine_exists and QUARANTINE in root:
                 continue
             for file in files:
-                if ".lock" in file or ".swp" in file or ".pyc" in file:
+                if ".lock" in file or ".swp" in file or ".pyc" in file or ".log" in file:
                     continue
                 path_to_program = os.path.join(root, file)
                 current_programs.add(path_to_program)
