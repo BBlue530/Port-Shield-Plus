@@ -32,5 +32,5 @@ def sniff_packets(packet):
                 block_ip(ip)
 
     except Exception as e:
-        message = f"Error: {e}"
+        message = f"[!] ERROR: {e}"
         logger(message)

@@ -15,7 +15,7 @@ if current_os == 'linux':
     except KeyboardInterrupt:
         print("\nStop.")
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"[!] ERROR: {e}")
 elif current_os == 'windows':
     print("Program doesnt run on windows.")
     print("Exit...")

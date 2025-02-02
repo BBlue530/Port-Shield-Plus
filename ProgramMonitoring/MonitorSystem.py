@@ -42,8 +42,8 @@ def scan_program_with_virustotal(path_to_program):
             json_response = response.json()
 
             if response.status_code == 404:
-                print(f"Error: {path_to_program} not found in VirusTotal.")
-                message = f"Error: {path_to_program} not found in VirusTotal."
+                print(f"[!] ERROR: {path_to_program} not found in VirusTotal.")
+                message = f"[!] ERROR: {path_to_program} not found in VirusTotal."
                 logger(message)
 
                 print(f"Submitting file {path_to_program} for scan...")
@@ -56,8 +56,8 @@ def scan_program_with_virustotal(path_to_program):
                 return
 
             if response.status_code != 200:
-                print(f"Error: {path_to_program}: {response.status_code}")
-                message = f"Error: {path_to_program}: {response.status_code}"
+                print(f"[!] ERROR: {path_to_program}: {response.status_code}")
+                message = f"[!] ERROR: {path_to_program}: {response.status_code}"
                 logger(message)
                 return
 
@@ -77,8 +77,8 @@ def scan_program_with_virustotal(path_to_program):
                         detected = sum([1 for engine in results.values() if engine["category"] == "malicious"])
 
                         if detected > 0:
-                            print(f"[WARNING]: {path_to_program} detected!")
-                            message = f"[WARNING]: {path_to_program} detected!"
+                            print(f"[!] WARNING: {path_to_program} detected!")
+                            message = f"[!] WARNING: {path_to_program} detected!"
                             logger(message)
                             kill_program(path_to_program)
                             quarantine_program(path_to_program)
@@ -91,18 +91,18 @@ def scan_program_with_virustotal(path_to_program):
                         print(f"Scan for program {path_to_program} is still in progress...")
 
             else:
-                print(f"Error scanning: {path_to_program}: {response.status_code}")
-                message = f"Error scanning: {path_to_program}: {response.status_code}"
+                print(f"[!] ERROR scanning: {path_to_program}: {response.status_code}")
+                message = f"[!] ERROR scanning: {path_to_program}: {response.status_code}"
                 logger(message)
 
         except Exception as e:
-            print(f"Error: {e}")
-            message = f"Error: {e}"
+            print(f"[!] ERROR: {e}")
+            message = f"[!] ERROR: {e}"
             logger(message)
 
     else:
-        print(f"Error Hash: {path_to_program}.")
-        message = f"Error Hash: {path_to_program}."
+        print(f"[!] ERROR Hash: {path_to_program}.")
+        message = f"[!] ERROR Hash: {path_to_program}."
         logger(message)
 
 ###############################################################################################################

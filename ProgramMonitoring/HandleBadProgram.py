@@ -27,14 +27,14 @@ def kill_program(path_to_program):
                 time.sleep(5)
 
                 if psutil.pid_exists(pid):
-                    message = f"WARNING: {pid} Running"
+                    message = f"[!] WARNING: {pid} Running"
                     logger(message)
                     force_kill(pid, path_to_program)
 
                 return
     except Exception as e:
-        print(f"WARNING ERROR KILLING: {path_to_program}: {e}")
-        message = f"WARNING ERROR KILLING: {path_to_program}: {e}"
+        print(f"[!] WARNING ERROR KILLING: {path_to_program}: {e}")
+        message = f"[!] WARNING ERROR KILLING: {path_to_program}: {e}"
         logger(message)
 
 def force_kill(pid, path_to_program):
@@ -54,7 +54,7 @@ def force_kill(pid, path_to_program):
             logger(message)
 
     except Exception as e:
-        message = f"ERROR Force Kill Failed: {pid}: {e}"
+        message = f"[!] ERROR Force Kill Failed: {pid}: {e}"
         logger(message)
 
 ###############################################################################################################
@@ -99,8 +99,8 @@ def quarantine_program(path_to_program):
         logger(message)
 
     except Exception as e:
-        print(f"WARNING ERROR QUARANTINING PROGRAM: {path_to_program}: {e}")
-        message = f"WARNING ERROR QUARANTINING PROGRAM: {path_to_program}: {e}"
+        print(f"[!] WARNING ERROR QUARANTINING PROGRAM: {path_to_program}: {e}")
+        message = f"[!] WARNING ERROR QUARANTINING PROGRAM: {path_to_program}: {e}"
         logger(message)
 
 ###############################################################################################################
@@ -113,8 +113,8 @@ def calculate_file_hash(path_to_program):
                 sha256_hash.update(byte_block)
         return sha256_hash.hexdigest()
     except Exception as e:
-        print(f"Error Hash: {path_to_program}: {e}")
-        message = f"Error Hash: {path_to_program}: {e}"
+        print(f"[!] ERROR Hash: {path_to_program}: {e}")
+        message = f"[!] ERROR Hash: {path_to_program}: {e}"
         logger(message)
         return None
     
@@ -145,16 +145,16 @@ def load_encryption_key():
             key = key_file.read()
             return key
     except Exception as e:
-        print(f"Error: {e}")
-        message = f"Error: {e}"
+        print(f"[!] ERROR: {e}")
+        message = f"[!] ERROR: {e}"
         logger(message)
         return None
 
 ENCRYPTION_KEY = load_encryption_key()
 
 if ENCRYPTION_KEY is None:
-    print("Error: Encryption Key")
-    message = "Error: Encryption Key"
+    print("[!] ERROR: Encryption Key")
+    message = "[!] ERROR: Encryption Key"
     logger(message)
     exit(1)
 

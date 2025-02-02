@@ -28,8 +28,8 @@ def check_scan_status(analysis_id, path_to_program):
                     detected = sum([1 for engine in results.values() if engine["category"] == "malicious"])
 
                     if detected > 0:
-                        print(f"[WARNING]: {path_to_program} detected!")
-                        message = f"[WARNING]: {path_to_program} detected!"
+                        print(f"[!] WARNING: {path_to_program} detected!")
+                        message = f"[!] WARNING: {path_to_program} detected!"
                         logger(message)
                         kill_program(path_to_program)
                         quarantine_program(path_to_program)
@@ -43,14 +43,14 @@ def check_scan_status(analysis_id, path_to_program):
                     retries += 1
                     time.sleep(60)
             else:
-                print(f"Error scan status: {response.status_code}")
-                message = f"Error scan status: {path_to_program}: {response.status_code}"
+                print(f"[!] ERROR scan status: {response.status_code}")
+                message = f"[!] ERROR scan status: {path_to_program}: {response.status_code}"
                 logger(message)
                 return
             
         except Exception as e:
-            print(f"Error: {e}")
-            message = f"Error: {e}"
+            print(f"[!] ERROR: {e}")
+            message = f"[!] ERROR: {e}"
             logger(message)
             retries += 1
             time.sleep(10)
@@ -72,14 +72,14 @@ def submit_file_for_scan(path_to_program):
                 print(f"File submitted successfully. Analysis ID: {analysis_id}")
                 return analysis_id
             else:
-                print(f"Error: Response did not have data: {json_response}")
+                print(f"[!] ERROR: Response did not have data: {json_response}")
                 return None
         else:
-            print(f"Error Submit File: Status Code: {response.status_code}")
+            print(f"[!] ERROR Submit File: Status Code: {response.status_code}")
             print(f"Response: {response.json()}")
             return None
     except Exception as e:
-        print(f"Error submitting: {path_to_program}: {e}")
+        print(f"[!] ERROR submitting: {path_to_program}: {e}")
         return None
     
 ###############################################################################################################

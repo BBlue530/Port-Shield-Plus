@@ -9,8 +9,8 @@ from Variables import BACKUP_FILES, BACKUP_KEY, owner_email
 ###############################################################################################################
 
 def last_line_defense(program):
-    print(f"LAST LINE OF DEFENSE TRIGGERED: CAUSE: {program}")
-    message = f"LAST LINE OF DEFENSE TRIGGERED: CAUSE: {program}"
+    print(f"[!]LAST LINE OF DEFENSE TRIGGERED: CAUSE: {program}")
+    message = f"[!]LAST LINE OF DEFENSE TRIGGERED: CAUSE: {program}"
     logger(message)
     from ProgramMonitoring.HandleBadProgram import kill_program
     encrypt_backup_files(BACKUP_KEY)
@@ -24,8 +24,8 @@ def last_line_defense(program):
 
 def encrypt_backup_files(BACKUP_KEY):
     if BACKUP_KEY is None:
-        print("[ERROR] Backup key is missing!")
-        message = "[ERROR] Backup key is missing!"
+        print("[!] ERROR Backup key is missing!")
+        message = "[!] ERROR Backup key is missing!"
         logger(message)
         return
 
@@ -43,8 +43,8 @@ def encrypt_backup_files(BACKUP_KEY):
                 message = f"Encrypted backup file: {file_path}"
                 logger(message)
     except Exception as e:
-        print(f"[WARNING] Error encrypting backup files: {e}")
-        message = f"[WARNING] Error encrypting backup files: {e}"
+        print(f"[!] ERROR encrypting backup files: {e}")
+        message = f"[!] ERROR encrypting backup files: {e}"
         logger(message)
 
 def load_BACKUP_KEY():
@@ -52,8 +52,8 @@ def load_BACKUP_KEY():
         with open(BACKUP_KEY, "rb") as key_file:
             return key_file.read()
     except Exception as e:
-        print(f"Error loading backup encryption key: {e}")
-        message = f"Error loading backup encryption key: {e}"
+        print(f"[!] ERROR loading backup encryption key: {e}")
+        message = f"[!] ERROR loading backup encryption key: {e}"
         logger(message)
         return None
 
@@ -69,8 +69,8 @@ def remove_compromised_program(program):
         message = f"Removed program: {program}"
         logger(message)
     except Exception as e:
-        print(f"[WARNING] Failed to remove program {program}: {e}")
-        logger(f"[WARNING] Failed to remove program {program}: {e}")
+        print(f"[!] WARNING Failed to remove program {program}: {e}")
+        logger(f"[!] WARNING Failed to remove program {program}: {e}")
 
 ###############################################################################################################
 
@@ -89,8 +89,8 @@ def alert_owner(owner_email):
         message = f"Notified: {owner_email} with alert."
         logger(message)
     except Exception as e:
-        print(f"[WARNING] Failed to notify owner: {e}")
-        message = f"[WARNING] Failed to notify owner: {e}"
+        print(f"[!] WARNING Failed to notify owner: {e}")
+        message = f"[!] WARNING Failed to notify owner: {e}"
         logger(message)
 
 def machine_info():
@@ -99,8 +99,8 @@ def machine_info():
         ip_address = socket.gethostbyname(hostname)
         return hostname, ip_address
     except Exception as e:
-        print(f"[WARNING] Failed getting machine info: {e}")
-        message = f"[WARNING] Failed getting machine info: {e}"
+        print(f"[!] WARNING Failed getting machine info: {e}")
+        message = f"[!] WARNING Failed getting machine info: {e}"
         logger(message)
         return "Unknown", "Unknown"
 
@@ -114,8 +114,8 @@ def disable_network():
         message = "Network interfaces disabled."
         logger(message)
     except Exception as e:
-        print(f"[WARNING] Failed disable network: {e}")
-        message = f"[WARNING] Failed disable network: {e}"
+        print(f"[!] WARNING Failed disable network: {e}")
+        message = f"[!] WARNING Failed disable network: {e}"
         logger(message)
 
 ###############################################################################################################
@@ -127,8 +127,8 @@ def lockdown_bios():
         message = "Rebooting into BIOS."
         logger(message)
     except Exception as e:
-        print(f"[WARNING] Failed reboot into BIOS: {e}")
-        message = f"[WARNING] Failed reboot into BIOS: {e}"
+        print(f"[!] WARNING Failed reboot into BIOS: {e}")
+        message = f"[!] WARNING Failed reboot into BIOS: {e}"
         logger(message)
 
 ###############################################################################################################
