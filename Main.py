@@ -17,5 +17,5 @@ if current_os == 'linux':
     except Exception as e:
         print(f"[!] ERROR: {e}")
 elif current_os == 'windows':
-    print("Program doesnt run on windows.")
+    print("[i] Program doesnt run on windows.")
     print("Exit...")

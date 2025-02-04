@@ -35,7 +35,7 @@ def encryption_check(quarantined_path_to_program, stored_hash):
             last_line_defense(quarantined_path_to_program)
 
     else:
-        message = f"Encryption worked {quarantined_path_to_program}."
+        message = f"[i] Encryption worked {quarantined_path_to_program}."
         logger(message)
 
 
@@ -67,7 +67,7 @@ def writable_access_check(file):
                 last_line_defense(file)
 
     except IOError:
-        message = f"Quarantine {file} is protected from writing."
+        message = f"[i] Quarantine {file} is protected from writing."
         logger(message)
 
 ###############################################################################################################
@@ -76,12 +76,12 @@ def pid_still_running(pid, path_to_program):
     try:
         proc = psutil.Process(pid)
         proc.terminate()
-        message = f"Terminated PID: {pid}"
+        message = f"[i] Terminated PID: {pid}"
         logger(message)
         
         time.sleep(5)
         if psutil.pid_exists(pid):
-            message = f"PID: {pid} still running"
+            message = f"[!] PID: {pid} still running"
             logger(message)
             os.kill(pid, signal.SIGKILL)
             time.sleep(5)
@@ -90,14 +90,14 @@ def pid_still_running(pid, path_to_program):
             proc.suspend()
             time.sleep(1)
             proc.kill()
-            message = f"Suspended/Killed PID: {pid}"
+            message = f"[!] Suspended/Killed PID: {pid}"
             logger(message)
         
         if psutil.pid_exists(pid):
             kill_parent_program(pid)
         
         if psutil.pid_exists(pid):
-            message = f"Last Kill of PID attempt: {pid}"
+            message = f"[!] Last Kill of PID attempt: {pid}"
             logger(message)
             if os.name == "nt":
                 os.system(f"taskkill /F /PID {pid}")
@@ -122,7 +122,7 @@ def pid_still_running(pid, path_to_program):
 def kill_parent_program(pid):
     try:
         parent_pid = psutil.Process(pid).parent().pid
-        message = f"Kill of parent program PID: {parent_pid} from: {pid}."
+        message = f"[i] Kill of parent program PID: {parent_pid} from: {pid}."
         logger(message)
         os.kill(parent_pid, signal.SIGKILL)
     except Exception as e:
@@ -152,15 +152,15 @@ def permissionns_check(quarantined_path_to_program):
     permissions_program = oct(stats_p.st_mode)[-3:]
 
     if permissions_program != "000":
-        message = f"Trying to apply permissions again: {quarantined_path_to_program} Current Permission: {permissions_program}"
+        message = f"[i] Trying to apply permissions again: {quarantined_path_to_program} Current Permission: {permissions_program}"
         logger(message)
         os.chmod(quarantined_path_to_program, 0o000)
         stats_p = os.stat(quarantined_path_to_program)
         permissions_program = oct(stats_p.st_mode)[-3:]
 
         if permissions_program != "000":
-            print(f"WARNINNG Program: {quarantined_path_to_program} Current Permission: {permissions_program}")
-            message = f"WARNINNG Program: {quarantined_path_to_program} Current Permission: {permissions_program}"
+            print(f"[!] WARNINNG Program: {quarantined_path_to_program} Current Permission: {permissions_program}")
+            message = f"[!] WARNINNG Program: {quarantined_path_to_program} Current Permission: {permissions_program}"
             logger(message)
             last_line_defense(quarantined_path_to_program)
 
@@ -170,7 +170,7 @@ def permissionns_check(quarantined_path_to_program):
     permissions_quarantine = oct(stats_q.st_mode)[-3:]
 
     if permissions_quarantine !="333":
-        message = f"Trying to apply permissions again: {QUARANTINE}"
+        message = f"[i] Trying to apply permissions again: {QUARANTINE}"
         logger(message)
         os.chmod(QUARANTINE, 0o333)
         stats_q = os.stat(QUARANTINE)

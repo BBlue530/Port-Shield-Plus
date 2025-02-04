@@ -21,8 +21,8 @@ def kill_program(path_to_program):
                 proc.kill()
                 pid = proc.info['pid']
 
-                print(f"Killed PID {proc.info['pid']} program: {path_to_program}")
-                message = f"Killed PID {proc.info['pid']} program: {path_to_program}"
+                print(f"[i] Killed PID {proc.info['pid']} program: {path_to_program}")
+                message = f"[i] Killed PID {proc.info['pid']} program: {path_to_program}"
                 logger(message)
                 time.sleep(5)
 
@@ -50,7 +50,7 @@ def force_kill(pid, path_to_program):
             pid_still_running(pid, path_to_program)
 
         else:
-            message = f"Forcefully killed PID {pid}"
+            message = f"[i] Forcefully killed PID {pid}"
             logger(message)
 
     except Exception as e:
@@ -85,8 +85,8 @@ def quarantine_program(path_to_program):
         ensure_immutable(quarantined_path_to_program)
         ensure_immutable(QUARANTINE)
 
-        print(f"Moved program: {path_to_program} to {quarantined_path_to_program}")
-        message = f"Moved program: {path_to_program} to {quarantined_path_to_program}"
+        print(f"[i] Moved program: {path_to_program} to {quarantined_path_to_program}")
+        message = f"[i] Moved program: {path_to_program} to {quarantined_path_to_program}"
         logger(message)
 
         os.chmod(quarantined_path_to_program, 0o000) # Gotta make it make everything inside the folder of the program read only. So ill prolly end up making it make a folder that puts it in quarantine
@@ -94,8 +94,8 @@ def quarantine_program(path_to_program):
 
         quarantine_check()
 
-        print(f"Quarantine Of: {quarantined_path_to_program} Worked.")
-        message = f"Quarantine Of: {quarantined_path_to_program} Worked."
+        print(f"[i] Quarantine Of: {quarantined_path_to_program} Worked.")
+        message = f"[i] Quarantine Of: {quarantined_path_to_program} Worked."
         logger(message)
 
     except Exception as e:

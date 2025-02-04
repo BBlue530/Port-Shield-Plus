@@ -9,18 +9,18 @@ ip_last_blocked = {}
 def block_ip(ip):
     current_time = time.time()
     if ip in ip_last_blocked and current_time - ip_last_blocked[ip] < BLOCK_DURATION:
-        print(f"IP {ip} already blocked recently.")
+        print(f"[i] IP {ip} already blocked recently.")
         return
 
     current_os = platform.system().lower()
 
     if current_os == 'linux':
         os.system(f"sudo iptables -A INPUT -s {ip} -j DROP")
-        message = f"Block IP: {ip} for: {BLOCK_DURATION} seconds."
+        message = f"[i] Block IP: {ip} for: {BLOCK_DURATION} seconds."
         logger(message)
     elif current_os == 'windows':
         os.system(f"netsh advfirewall firewall add rule name='Block {ip}' dir=in interface=any action=block remoteip={ip}")
-        message = f"Block IP: {ip} for: {BLOCK_DURATION} seconds."
+        message = f"[i] Block IP: {ip} for: {BLOCK_DURATION} seconds."
         logger(message)
 
     ip_last_blocked[ip] = current_time
@@ -34,5 +34,5 @@ def block_ip(ip):
     elif current_os == 'windows':
         os.system(f"netsh advfirewall firewall delete rule name='Block {ip}'")
 
-    message = f"Unblock IP: {ip} after: {BLOCK_DURATION} seconds."
+    message = f"[i] Unblock IP: {ip} after: {BLOCK_DURATION} seconds."
     logger(message)

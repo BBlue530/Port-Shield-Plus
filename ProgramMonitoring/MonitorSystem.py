@@ -68,11 +68,11 @@ def scan_program_with_virustotal(path_to_program):
                     status = analysis["status"]
                     if status == "completed":
                         results = analysis.get("results", {})
-                        print(f"Scan completed for: {path_to_program}")
-                        message = f"Scan completed for: {path_to_program}"
+                        print(f"[i] Scan completed for: {path_to_program}")
+                        message = f"[i] Scan completed for: {path_to_program}"
                         logger(message)
-                        print(f"Scan results: {results}")
-                        message = f"Scan results: {results}"
+                        print(f"[i] Scan results: {results}")
+                        message = f"[i] Scan results: {results}"
                         logger(message)
                         detected = sum([1 for engine in results.values() if engine["category"] == "malicious"])
 
@@ -83,12 +83,12 @@ def scan_program_with_virustotal(path_to_program):
                             kill_program(path_to_program)
                             quarantine_program(path_to_program)
                         else:
-                            print(f"Program {path_to_program} is safe.")
-                            message = f"Program {path_to_program} is safe."
+                            print(f"[i] Program {path_to_program} is safe.")
+                            message = f"[i] Program {path_to_program} is safe."
                             logger(message)
 
                     else:
-                        print(f"Scan for program {path_to_program} is still in progress...")
+                        print(f"[i] Scan for program {path_to_program} is still in progress...")
 
             else:
                 print(f"[!] ERROR scanning: {path_to_program}: {response.status_code}")

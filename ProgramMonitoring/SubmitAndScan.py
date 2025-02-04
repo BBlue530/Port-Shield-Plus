@@ -18,12 +18,12 @@ def check_scan_status(analysis_id, path_to_program):
             if response.status_code == 200:
                 status = json_response.get("data", {}).get("attributes", {}).get("status")
                 if status == "completed":
-                    print(f"Scan completed: {path_to_program}")
-                    message = f"Scan completed: {path_to_program}"
+                    print(f"[i] Scan completed: {path_to_program}")
+                    message = f"[i] Scan completed: {path_to_program}"
                     logger(message)
                     results = json_response.get("data", {}).get("attributes", {}).get("results", {})
-                    print(f"Scan results: {results}")
-                    message = f"Scan results: {results}"
+                    print(f"[i] Scan results: {results}")
+                    message = f"[i] Scan results: {results}"
                     logger(message)
                     detected = sum([1 for engine in results.values() if engine["category"] == "malicious"])
 
@@ -34,8 +34,8 @@ def check_scan_status(analysis_id, path_to_program):
                         kill_program(path_to_program)
                         quarantine_program(path_to_program)
                     else:
-                        print(f"Program {path_to_program} is safe.")
-                        message = f"Program {path_to_program} is safe."
+                        print(f"[i] Program {path_to_program} is safe.")
+                        message = f"[i] Program {path_to_program} is safe."
                         logger(message)
                     return
                 else:

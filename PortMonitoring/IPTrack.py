@@ -22,11 +22,11 @@ def sniff_packets(packet):
 
             if len(unique_ports) > PORTS_ACCESSED:
                 ports_attempted = ', '.join(map(str, unique_ports))
-                print(f"IP: {ip} accessed {len(unique_ports)} unique ports in {TIME_GATE} seconds. "
-                      f"Tried Ports: {ports_attempted}.")
+                print(f"[i] IP: {ip} accessed {len(unique_ports)} unique ports in {TIME_GATE} seconds. "
+                      f"[i] Tried Ports: {ports_attempted}.")
                 
-                message = (f"IP: {ip} accessed {len(unique_ports)} unique ports in {TIME_GATE} seconds. "
-                           f"Tried Ports: {ports_attempted}.")
+                message = (f"[i] IP: {ip} accessed {len(unique_ports)} unique ports in {TIME_GATE} seconds. "
+                           f"[i] Tried Ports: {ports_attempted}.")
                 logger(message)
 
                 block_ip(ip)
