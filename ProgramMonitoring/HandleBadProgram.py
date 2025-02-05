@@ -76,7 +76,7 @@ def quarantine_program(path_to_program):
         remove_directory_immutable(QUARANTINE)
         shutil.move(path_to_program, quarantined_path_to_program)
         current_hash = calculate_file_hash(quarantined_path_to_program)
-        check_quarantine_integrity(current_hash, stored_hash, path_to_program)
+        check_quarantine_integrity(current_hash, stored_hash, path_to_program, quarantined_path_to_program)
 
         encrypt_file(quarantined_path_to_program, ENCRYPTION_KEY)
         encryption_check(quarantined_path_to_program, stored_hash)

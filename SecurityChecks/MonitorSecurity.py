@@ -1,4 +1,5 @@
 import os
+import shutil
 import psutil
 import time
 import signal
@@ -11,12 +12,16 @@ from Variables import QUARANTINE
 
 ###############################################################################################################
 
-def check_quarantine_integrity(current_hash, stored_hash, path_to_program):
+def check_quarantine_integrity(current_hash, stored_hash, path_to_program, quarantined_path_to_program):
     if current_hash != stored_hash:
         print(f"[!] WARNING Integrity check failed for {current_hash}.")
         message = f"[!] WARNING Integrity check failed for {current_hash}."
         logger(message)
-        last_line_defense(path_to_program) # Need to make it try to get integrity check work and then if it doesnt LLD
+
+        permissionns_check(quarantined_path_to_program)
+        permissionns_check(path_to_program)
+
+        
 
 def encryption_check(quarantined_path_to_program, stored_hash):
     from ProgramMonitoring.HandleBadProgram import calculate_file_hash
@@ -146,23 +151,29 @@ def ensure_immutable(quarantined_program):
 
 ###############################################################################################################
 
-def permissionns_check(quarantined_path_to_program):
+def permissionns_check(permissions_of_quarantined_path_to_program):
 
-    stats_p = os.stat(quarantined_path_to_program)
+    if not os.path.exists(permissions_of_quarantined_path_to_program):
+        print(f"[!] WARNING: Path does not exist: {permissions_of_quarantined_path_to_program}.")
+        message = f"[!] WARNING: Path does not exist: {permissions_of_quarantined_path_to_program}."
+        logger(message)
+        return
+
+    stats_p = os.stat(permissions_of_quarantined_path_to_program)
     permissions_program = oct(stats_p.st_mode)[-3:]
 
     if permissions_program != "000":
-        message = f"[i] Trying to apply permissions again: {quarantined_path_to_program} Current Permission: {permissions_program}"
+        message = f"[i] Trying to apply permissions again: {permissions_of_quarantined_path_to_program} Current Permission: {permissions_program}"
         logger(message)
-        os.chmod(quarantined_path_to_program, 0o000)
-        stats_p = os.stat(quarantined_path_to_program)
+        os.chmod(permissions_of_quarantined_path_to_program, 0o000)
+        stats_p = os.stat(permissions_of_quarantined_path_to_program)
         permissions_program = oct(stats_p.st_mode)[-3:]
 
         if permissions_program != "000":
-            print(f"[!] WARNINNG Program: {quarantined_path_to_program} Current Permission: {permissions_program}")
-            message = f"[!] WARNINNG Program: {quarantined_path_to_program} Current Permission: {permissions_program}"
+            print(f"[!] WARNINNG Program: {permissions_of_quarantined_path_to_program} Current Permission: {permissions_program}")
+            message = f"[!] WARNINNG Program: {permissions_of_quarantined_path_to_program} Current Permission: {permissions_program}"
             logger(message)
-            last_line_defense(quarantined_path_to_program)
+            last_line_defense(permissions_of_quarantined_path_to_program)
 
 
 
@@ -180,6 +191,6 @@ def permissionns_check(quarantined_path_to_program):
             print(f"[!] WARNING Program: {QUARANTINE} Current Permission: {permissions_quarantine}")
             message = f"[!] WARNING Program: {QUARANTINE} Current Permission: {permissions_quarantine}"
             logger(message)
-            last_line_defense(quarantined_path_to_program)
+            last_line_defense(permissions_of_quarantined_path_to_program)
 
 ###############################################################################################################
