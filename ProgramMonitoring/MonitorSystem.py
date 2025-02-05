@@ -145,7 +145,7 @@ def monitor_system():
         old_seen_programs.update(new_programs)
         time.sleep(15)
 
-def start_monitoring():
+def start_program_monitoring():
     file_monitor_thread = threading.Thread(target=monitor_system)
     file_monitor_thread.daemon = True
     file_monitor_thread.start()

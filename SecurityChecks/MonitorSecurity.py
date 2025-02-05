@@ -18,7 +18,7 @@ def check_quarantine_integrity(current_hash, stored_hash, path_to_program, quara
         logger(message)
 
         encryption_check(quarantined_path_to_program, stored_hash, ENCRYPTION_KEY)
-        encryption_check(path_to_program, stored_hash, ENCRYPTION_KEY)
+        encryption_check(path_to_program, stored_hash, stored_hash, ENCRYPTION_KEY)
         permissionns_check(quarantined_path_to_program)
         permissionns_check(path_to_program)
 

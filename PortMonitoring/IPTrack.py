@@ -34,3 +34,15 @@ def sniff_packets(packet):
     except Exception as e:
         message = f"[!] ERROR: {e}"
         logger(message)
+
+###############################################################################################################
+
+def start_sniffing():
+    try:
+        sniff(prn=sniff_packets, store=0, filter="ip")
+    except KeyboardInterrupt:
+        print("\nStop.")
+    except Exception as e:
+        print(f"[!] ERROR: {e}")
+
+###############################################################################################################

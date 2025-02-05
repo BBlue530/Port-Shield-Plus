@@ -1,21 +1,29 @@
 from scapy.all import sniff
-from PortMonitoring.IPTrack import sniff_packets
-from ProgramMonitoring.MonitorSystem import start_monitoring
+from PortMonitoring.IPTrack import start_sniffing
+from ProgramMonitoring.MonitorSystem import start_program_monitoring
 import platform
+import threading
 
 current_os = platform.system().lower()
 
 print("Start...")
 
 # I have not made all the functions of this work on windows yet but i will later on but for now this will have to work
+
+###############################################################################################################
+
 if current_os == 'linux':
-    start_monitoring()
-    try:
-        sniff(prn=sniff_packets, store=0, filter="ip")
-    except KeyboardInterrupt:
-        print("\nStop.")
-    except Exception as e:
-        print(f"[!] ERROR: {e}")
+
+    program_monitor_thread = threading.Thread(target=start_program_monitoring, daemon=True)
+    sniff_packets_thread = threading.Thread(target=start_sniffing, daemon=True)
+    
+    program_monitor_thread.start()
+    sniff_packets_thread.start()
+
+    sniff_packets_thread.join()
+
 elif current_os == 'windows':
-    print("[i] Program doesnt run on windows.")
+    print("[i] Program doesn't run on Windows.")
     print("Exit...")
+
+###############################################################################################################
