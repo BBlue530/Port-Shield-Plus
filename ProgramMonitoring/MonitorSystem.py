@@ -46,11 +46,11 @@ def scan_program_with_virustotal(path_to_program):
                 message = f"[!] ERROR: {path_to_program} not found in VirusTotal."
                 logger(message)
 
-                print(f"Submitting file {path_to_program} for scan...")
+                print(f"[i] Submitting file {path_to_program} for scan...")
                 analysis_id = submit_file_for_scan(path_to_program)
 
                 if analysis_id:
-                    print(f"File {path_to_program} uploaded. Waiting for scan to complete...")
+                    print(f"[i] File {path_to_program} uploaded. Waiting for scan to complete...")
                     time.sleep(60)
                     check_scan_status(analysis_id, path_to_program)
                 return
@@ -139,7 +139,7 @@ def monitor_system():
         new_programs = current_programs - old_seen_programs
 
         for new_file in new_programs:
-            print(f"New program found: {new_file}")
+            print(f"[i] New program found: {new_file}")
             scan_program_with_virustotal(new_file)
 
         old_seen_programs.update(new_programs)

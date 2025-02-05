@@ -39,7 +39,7 @@ def check_scan_status(analysis_id, path_to_program):
                         logger(message)
                     return
                 else:
-                    print(f"Retrying Scan: {path_to_program}")
+                    print(f"[i] Retrying Scan: {path_to_program}")
                     retries += 1
                     time.sleep(60)
             else:
@@ -69,14 +69,14 @@ def submit_file_for_scan(path_to_program):
             
             if 'data' in json_response and 'id' in json_response['data']:
                 analysis_id = json_response['data']['id']
-                print(f"File submitted successfully. Analysis ID: {analysis_id}")
+                print(f"[i] File submitted successfully. Analysis ID: {analysis_id}")
                 return analysis_id
             else:
                 print(f"[!] ERROR: Response did not have data: {json_response}")
                 return None
         else:
             print(f"[!] ERROR Submit File: Status Code: {response.status_code}")
-            print(f"Response: {response.json()}")
+            print(f"[i] Response: {response.json()}")
             return None
     except Exception as e:
         print(f"[!] ERROR submitting: {path_to_program}: {e}")

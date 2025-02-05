@@ -7,7 +7,7 @@ import psutil
 import os
 import signal
 import time
-from Variables import QUARANTINE
+from Variables import QUARANTINE, directory_permissions, program_permissions
 from IPLogger import logger
 from ProgramMonitoring.Immutable import remove_directory_immutable, apply_directory_immutable
 from SecurityChecks.MonitorSecurity import check_quarantine_integrity, pid_still_running, encryption_check, quarantine_check, ensure_immutable, permissionns_check
@@ -78,8 +78,10 @@ def quarantine_program(path_to_program):
         current_hash = calculate_file_hash(quarantined_path_to_program)
         check_quarantine_integrity(current_hash, stored_hash, path_to_program, quarantined_path_to_program)
 
-        encrypt_file(quarantined_path_to_program, ENCRYPTION_KEY)
-        encryption_check(quarantined_path_to_program, stored_hash)
+        encrypt_file(quarantined_path_to_program, stored_hash, ENCRYPTION_KEY)
+        print("after the method")
+        encryption_check(quarantined_path_to_program, stored_hash, ENCRYPTION_KEY)
+        print("after the check")
 
         apply_directory_immutable(QUARANTINE)
         ensure_immutable(quarantined_path_to_program)
@@ -89,7 +91,7 @@ def quarantine_program(path_to_program):
         message = f"[i] Moved program: {path_to_program} to {quarantined_path_to_program}"
         logger(message)
 
-        os.chmod(quarantined_path_to_program, 0o000) # Gotta make it make everything inside the folder of the program read only. So ill prolly end up making it make a folder that puts it in quarantine
+        os.chmod(quarantined_path_to_program, program_permissions) # Gotta make it make everything inside the folder of the program read only. So ill prolly end up making it make a folder that puts it in quarantine
         permissionns_check(quarantined_path_to_program)
 
         quarantine_check()
@@ -123,21 +125,25 @@ def calculate_file_hash(path_to_program):
 def secure_quarantine_folder():
 
     # Non executable directory
-    os.chmod(QUARANTINE, 0o333)
+    os.chmod(QUARANTINE, directory_permissions)
     # Change ownership
     os.chown(QUARANTINE, pwd.getpwnam('nobody').pw_uid, -1)
 
 ###############################################################################################################
 
-def encrypt_file(path_to_program, encryption_key):
-    cipher = Fernet(encryption_key)
-    with open(path_to_program, 'rb') as f:
-        data = f.read()
-    encrypted_data = cipher.encrypt(data)
+def encrypt_file(quarantined_path_to_program, stored_hash, ENCRYPTION_KEY):
+    encrypted_hash = calculate_file_hash(quarantined_path_to_program)
+    print("before encrypt if")
+    if encrypted_hash == stored_hash:
+        print("after encrypt if and started encrypt")
+        cipher = Fernet(ENCRYPTION_KEY)
+        with open(quarantined_path_to_program, 'rb') as f:
+            data = f.read()
+        encrypted_data = cipher.encrypt(data)
 
     # Overwrite with encrypted data
-    with open(path_to_program, 'wb') as f:
-        f.write(encrypted_data)
+        with open(quarantined_path_to_program, 'wb') as f:
+            f.write(encrypted_data)
 
 def load_encryption_key():
     try:
@@ -159,8 +165,5 @@ if ENCRYPTION_KEY is None:
     exit(1)
 
 cipher = Fernet(ENCRYPTION_KEY)
-
-def encrypt_file_failed(quarantined_path_to_program):
-    encrypt_file(quarantined_path_to_program)
 
 ###############################################################################################################

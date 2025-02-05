@@ -16,8 +16,8 @@ def check_timer(start_time, function):
     memory_total = memory_info.total / (1024 ** 2)
     memory_percent = memory_info.percent
 
-    print(f"[i] {function} took {duration:.4f} seconds.")
-    print(f"[i] CPU: {cpu_usage:.2f}%")
-    print(f"[i] Memory: {memory_used:.2f} MB / {memory_total:.2f} MB ({memory_percent}%)")
+    print(f"[P] {function} took {duration:.4f} seconds.")
+    print(f"[P] CPU: {cpu_usage:.2f}%")
+    print(f"[P] Memory: {memory_used:.2f} MB / {memory_total:.2f} MB ({memory_percent}%)")
 
     return duration

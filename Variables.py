@@ -17,6 +17,9 @@ BACKUP_FILES ="/Backup"
 
 BACKUP_KEY = "backup_key.key"
 
+program_permissions = 0o644
+directory_permissions = 0o000
+
 requests_made = deque()
 
 ip_ports_accessed = defaultdict(set)
