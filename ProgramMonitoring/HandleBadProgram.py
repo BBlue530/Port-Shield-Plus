@@ -79,9 +79,7 @@ def quarantine_program(path_to_program):
         check_quarantine_integrity(current_hash, stored_hash, path_to_program, quarantined_path_to_program)
 
         encrypt_file(quarantined_path_to_program, stored_hash, ENCRYPTION_KEY)
-        print("after the method")
         encryption_check(quarantined_path_to_program, stored_hash, ENCRYPTION_KEY)
-        print("after the check")
 
         apply_directory_immutable(QUARANTINE)
         ensure_immutable(quarantined_path_to_program)
@@ -133,9 +131,7 @@ def secure_quarantine_folder():
 
 def encrypt_file(quarantined_path_to_program, stored_hash, ENCRYPTION_KEY):
     encrypted_hash = calculate_file_hash(quarantined_path_to_program)
-    print("before encrypt if")
     if encrypted_hash == stored_hash:
-        print("after encrypt if and started encrypt")
         cipher = Fernet(ENCRYPTION_KEY)
         with open(quarantined_path_to_program, 'rb') as f:
             data = f.read()

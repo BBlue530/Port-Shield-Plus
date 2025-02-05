@@ -12,15 +12,13 @@ from ProgramMonitoring.Immutable import apply_immutable
 ###############################################################################################################
 
 def check_quarantine_integrity(current_hash, stored_hash, path_to_program, quarantined_path_to_program):
-    if current_hash == stored_hash:
+    if current_hash != stored_hash:
         print(f"[!] WARNING Integrity check failed for {current_hash}.")
         message = f"[!] WARNING Integrity check failed for {current_hash}."
         logger(message)
 
         encryption_check(quarantined_path_to_program, stored_hash, ENCRYPTION_KEY)
-        print(f"quara to program {quarantined_path_to_program}")
         encryption_check(path_to_program, stored_hash, ENCRYPTION_KEY)
-        print(f"path to program {path_to_program}")
         permissionns_check(quarantined_path_to_program)
         permissionns_check(path_to_program)
 
@@ -64,12 +62,9 @@ def encryption_check(encryption_of_path_to_program, stored_hash, ENCRYPTION_KEY)
         logger(message)
 
         from ProgramMonitoring.HandleBadProgram import encrypt_file
-        print("before import")
         encrypt_file(encryption_of_path_to_program, stored_hash, ENCRYPTION_KEY)
-        print("after import")
 
         new_encrypted_hash = calculate_file_hash(encryption_of_path_to_program)
-        print("after new hash")
         if new_encrypted_hash == stored_hash:
             print(f"[!] WARNING ENCRYPTION FAILED ON: {encryption_of_path_to_program}")
             message = f"[!] WARNING ENCRYPTION FAILED ON: {encryption_of_path_to_program}"
