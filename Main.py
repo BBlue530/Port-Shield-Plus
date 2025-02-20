@@ -6,13 +6,11 @@ import threading
 
 current_os = platform.system().lower()
 
-print("Start...")
-
-# I have not made all the functions of this work on windows yet but i will later on but for now this will have to work
-
 ###############################################################################################################
 
 if current_os == 'linux':
+    
+    print("Start...")
 
     program_monitor_thread = threading.Thread(target=start_program_monitoring, daemon=True)
     sniff_packets_thread = threading.Thread(target=start_sniffing, daemon=True)
