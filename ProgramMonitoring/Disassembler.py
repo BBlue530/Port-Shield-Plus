@@ -2,6 +2,9 @@ from capstone import *
 import pefile
 from elftools.elf.elffile import ELFFile
 import os
+import re
+from Variables import BAD_CODE_PATTERN
+from ProgramMonitoring.HandleBadProgram import quarantine_program
 
 ###############################################################################################################
 
@@ -105,5 +108,21 @@ def disassemble_program(path_to_program, output_file="disassembled.txt"):
     # Prints and saves the disassembly. Will prolly get rid of the print later but keeping it for now
     print_disassembly(instructions)
     save_disassembly_to_file(instructions, output_file)
+    check_for_bad_code(path_to_program, output_file)
+
+###############################################################################################################
+
+def check_for_bad_code(path_to_program, output_file):
+    bad_code_found = False
+    with open(output_file, 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            for pattern in BAD_CODE_PATTERN:
+                if re.search(pattern, line):
+                    print(f"[!] BAD CODE DETECTED: {line.strip()}")
+                    bad_code_found = True
+
+    if bad_code_found:
+        quarantine_program(path_to_program)
 
 ###############################################################################################################

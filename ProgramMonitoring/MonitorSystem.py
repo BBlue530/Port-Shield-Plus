@@ -13,16 +13,7 @@ if not os.path.exists(QUARANTINE):
 ###############################################################################################################
 
 def scan_new_program(path_to_program):
-    detected = disassemble_program(path_to_program)
-    if detected == 1:
-        print(f"[!] WARNING: {path_to_program} detected!")
-        message = f"[!] WARNING: {path_to_program} detected!"
-        logger(message)
-        quarantine_program(path_to_program)
-    else:
-        print(f"[i] Program {path_to_program} is safe.")
-        message = f"[i] Program {path_to_program} is safe."
-        logger(message)
+    disassemble_program(path_to_program)
 
 ###############################################################################################################
 
