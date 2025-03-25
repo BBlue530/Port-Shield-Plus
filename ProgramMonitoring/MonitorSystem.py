@@ -5,15 +5,10 @@ from IPLogger import logger
 from Variables import old_seen_programs, QUARANTINE
 from ProgramMonitoring.HandleBadProgram import  quarantine_program
 from PerformanceMonitor import start_timer, check_timer
-from ProgramMonitoring.Disassembler import disassemble_program
+from ProgramMonitoring.HandleNewProgram import handle_new_program
 
 if not os.path.exists(QUARANTINE):
     os.makedirs(QUARANTINE)
-
-###############################################################################################################
-
-def scan_new_program(path_to_program):
-    disassemble_program(path_to_program)
 
 ###############################################################################################################
 
@@ -50,7 +45,7 @@ def monitor_system():
 
         for new_file in new_programs:
             print(f"[i] New program found: {new_file}")
-            scan_new_program(new_file)
+            handle_new_program(new_file)
 
         old_seen_programs.update(new_programs)
         time.sleep(15)

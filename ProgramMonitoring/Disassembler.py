@@ -54,12 +54,6 @@ def print_disassembly(instructions):
 
 def extract_code_section(binary_data, path_to_program):
     try:
-        file_extension = os.path.splitext(path_to_program)[1].lower()
-
-        # Theres prolly better ways to fix this problem
-        if file_extension in ['.bat', '.sh', '.py', '.pl', '.js', '.php']:
-            return binary_data
-
         if binary_data[:2] == b'MZ':
             return extract_code_section_from_pe(binary_data)
         

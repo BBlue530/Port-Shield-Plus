@@ -22,6 +22,203 @@ old_seen_programs = set()
 
 owner_email = "bb3250577@gmail.com"
 
+disassemblable_extensions = [
+    ".exe", ".dll", ".sys", ".com", ".bin", ".elf", ".out", 
+    ".apk", ".app", ".msi", ".pif", ".scr", ".jar", ".macho", 
+    ".img", ".rpm", ".deb"
+]
+non_disassemblable_extensions = [
+    ".bat", ".sh", ".py", ".pl", ".js", ".php", ".vbs"
+]
+
+BAD_CODE_PATTERN_BAT = [
+    "curl", 
+    "bitsadmin", 
+    "wget", 
+    "del", 
+    "erase", 
+    "rd", 
+    "reg add", 
+    "netstat", 
+    "nc", 
+    "runas", 
+    "start", 
+    "powershell", 
+    "schtasks", 
+    "echo",
+    "base64",
+    "Invoke-WebRequest",
+    "Set-MpPreference",
+    "cmd.exe /c"
+]
+
+BAD_CODE_PATTERN_SH = [
+    "curl", 
+    "wget", 
+    "rm -rf", 
+    "echo", 
+    "nc", 
+    "bash", 
+    "sudo", 
+    "su", 
+    "/tmp", 
+    "ufw", 
+    "iptables", 
+    "base64", 
+    "uname", 
+    "ifconfig", 
+    "ps aux", 
+    "Invoke-WebRequest", 
+    "pwsh"
+]
+
+BAD_CODE_PATTERN_PY = [
+    "import os", 
+    "import subprocess", 
+    "os.system", 
+    "subprocess.call", 
+    "os.remove", 
+    "os.rmdir", 
+    "shutil.rmtree", 
+    "exec", 
+    "eval", 
+    "open('/dev/sda', 'w')", 
+    "socket.socket", 
+    "subprocess.Popen", 
+    "os.popen", 
+    "import shutil", 
+    "import socket", 
+    "import requests", 
+    "import base64", 
+    "import time", 
+    "import hashlib", 
+    "import random"
+]
+
+BAD_CODE_PATTERN_PL = [
+    "system", 
+    "exec", 
+    "fork", 
+    "eval", 
+    "open(FILE, '|-',", 
+    "open(FILE, '>',", 
+    "unlink", 
+    "rmdir", 
+    "chmod", 
+    "chown", 
+    "kill", 
+    "socket", 
+    "IO::Socket", 
+    "LWP::UserAgent", 
+    "HTTP::Request", 
+    "LWP::Simple", 
+    "Net::Telnet", 
+    "use Net::SSH", 
+    "use IO::Socket::INET", 
+    "use HTTP::Request::Common", 
+    "use Socket", 
+    "system('rm -rf')"
+]
+
+BAD_CODE_PATTERN_JS = [
+    "eval", 
+    "Function(", 
+    "setTimeout", 
+    "setInterval", 
+    "document.write", 
+    "document.location", 
+    "window.location", 
+    "location.href", 
+    "XMLHttpRequest", 
+    "ActiveXObject", 
+    "FileReader", 
+    "alert", 
+    "unescape", 
+    "escape", 
+    "eval(function", 
+    "atob", 
+    "btoa", 
+    "location.replace", 
+    "document.cookie", 
+    "fetch(", 
+    "window.open", 
+    "window.location.replace", 
+    "window.location.href", 
+    "document.location.replace", 
+    "setInterval(function"
+]
+
+BAD_CODE_PATTERN_PHP = [
+    "eval(", 
+    "base64_decode(", 
+    "gzinflate(", 
+    "shell_exec(", 
+    "system(", 
+    "exec(", 
+    "passthru(", 
+    "popen(", 
+    "proc_open(", 
+    "curl_exec(", 
+    "file_get_contents(", 
+    "fopen(", 
+    "unlink(", 
+    "rmdir(", 
+    "chmod(", 
+    "chown(", 
+    "chgrp(", 
+    "getenv(", 
+    "putenv(", 
+    "$_SERVER", 
+    "$_GET", 
+    "$_POST", 
+    "$_COOKIE", 
+    "$_REQUEST", 
+    "$_FILES", 
+    "$_ENV", 
+    "$_SESSION", 
+    "header('Location:", 
+    "header('X-Forwarded-For:", 
+    "header('X-Real-IP:", 
+    "http_response_code(", 
+    "ob_start(", 
+    "ob_get_contents(", 
+    "ob_clean("
+]
+
+BAD_CODE_PATTERN_VBS = [
+    "CreateObject", 
+    "WScript.Shell", 
+    "WScript.CreateObject", 
+    "WScript.Exec", 
+    "WScript.Sleep", 
+    "Shell.Application", 
+    "GetObject", 
+    "Run", 
+    "Exec", 
+    "CreateObject(\"MSXML2.XMLHTTP\")", 
+    "CreateObject(\"MSXML2.ServerXMLHTTP\")", 
+    "CreateObject(\"Scripting.FileSystemObject\")", 
+    "CreateObject(\"WScript.Shell\")", 
+    "CreateObject(\"WScript.Network\")", 
+    "CreateObject(\"Microsoft.XMLHTTP\")", 
+    "CreateObject(\"Microsoft.XMLDOM\")", 
+    "ShellExecute", 
+    "objShell.Run", 
+    "objFSO", 
+    "WScript.Quit", 
+    "document.write", 
+    "MSHTML", 
+    "InternetExplorer.Application", 
+    "WScript.ScriptFullName", 
+    "WScript.Arguments", 
+    "WScript.Echo", 
+    "WScript.StdOut", 
+    "objShell.Popup", 
+    "objShell.SendKeys", 
+    "WScript.StdIn", 
+    "WScript.CreateObject(\"WScript.Shell\")"
+]
+
 BAD_CODE_PATTERN = [
     r"mov eax, 0x[A-Fa-f0-9]+;?\s*int 0x80",
     r"xor .*, .*",
