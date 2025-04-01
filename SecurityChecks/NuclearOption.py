@@ -1,10 +1,10 @@
 import subprocess
 from cryptography.fernet import Fernet
 import os
-import socket
 from IPLogger import logger
 from ProgramMonitoring.Immutable import remove_immutable
-from Variables import BACKUP_FILES, BACKUP_KEY, owner_email
+from SecurityChecks.Notification import alert_owner
+from Variables import BACKUP_FILES, BACKUP_KEY
 
 ###############################################################################################################
 
@@ -15,7 +15,7 @@ def last_line_defense(program):
     from ProgramMonitoring.HandleBadProgram import kill_program
     encrypt_backup_files(BACKUP_KEY)
     remove_compromised_program(program)
-    alert_owner(owner_email)
+    alert_owner()
     kill_program(program)
     disable_network()
     lockdown_bios()
@@ -72,38 +72,6 @@ def remove_compromised_program(program):
         print(f"[!] WARNING Failed to remove program {program}: {e}")
         message = f"[!] WARNING Failed to remove program {program}: {e}"
         logger(message)
-
-###############################################################################################################
-
-def alert_owner(owner_email):
-    hostname, ip_address = machine_info()
-    
-    email_message = f"""
-    [SECURITY ALERT] Suspicious Activity Detected On:
-    Machine Name: {hostname}
-    IP Address: {ip_address}
-    """
-
-    try:
-        subprocess.run(["mail", "-s", "Security Alert", owner_email], input=email_message.encode(), check=True)
-        print(f"[i] Notified: {owner_email} with alert.")
-        message = f"[i] Notified: {owner_email} with alert."
-        logger(message)
-    except Exception as e:
-        print(f"[!] WARNING Failed to notify owner: {e}")
-        message = f"[!] WARNING Failed to notify owner: {e}"
-        logger(message)
-
-def machine_info():
-    try:
-        hostname = socket.gethostname()
-        ip_address = socket.gethostbyname(hostname)
-        return hostname, ip_address
-    except Exception as e:
-        print(f"[!] WARNING Failed getting machine info: {e}")
-        message = f"[!] WARNING Failed getting machine info: {e}"
-        logger(message)
-        return "Unknown", "Unknown"
 
 ###############################################################################################################
 

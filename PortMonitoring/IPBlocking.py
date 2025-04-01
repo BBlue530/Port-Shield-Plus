@@ -1,6 +1,5 @@
 import os
 import time
-import platform
 from Variables import BLOCK_DURATION
 from IPLogger import logger
 

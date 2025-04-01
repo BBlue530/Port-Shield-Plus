@@ -1,0 +1,7 @@
+boto3
+capstone
+cryptography
+pefile
+pyelftools
+psutil
+scapy
