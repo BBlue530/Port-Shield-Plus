@@ -10,6 +10,16 @@ BACKUP_FILES ="/Backup"
 
 BACKUP_KEY = "backup_key.key"
 
+TIME_GATE = 10
+
+SYN_FLOOD_THRESHOLD = 50
+
+ip_last_blocked = {}
+
+ip_ports_accessed = defaultdict(list)
+
+ip_syn_count = defaultdict(int)
+
 program_permissions = 0o644
 directory_permissions = 0o000
 

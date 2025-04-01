@@ -1,6 +1,6 @@
 Port-Shield-Plus is an upgraded version of a previous project called Port-Shield. It is a Linux-based security tool that enhances the original logic by adding more advanced monitoring and defense capabilities. 
 Port-Shield-Plus monitors network activity and newly added programs to detect and block potential threats. It disassembles programs to check for malicious code, quarantines unsafe software, and blocks IPs engaging in suspicious port scanning. 
-In case of a severe security breach, it executes a "last line of defense," encrypting backups, removing compromised files, disabling network interfaces, and locking down BIOS to prevent further damage.
+In case of a severe security breach, it executes a "last line of defense," encrypting backups, removing compromised files, disabling network interfaces, and locking down BIOS to prevent further damage also sends real-time alerts through AWS SNS so admins are notified immediately.
 Features:
 
 
@@ -57,7 +57,7 @@ Encrypting backup files.
 
 Removing compromised programs.
 
-Notifying the owner via email.
+Notifying the owner via sms using SNS.
 
 Disabling network interfaces.
 
@@ -94,4 +94,3 @@ How to Use:
 4: If an IP performs excessive port scanning, it is blocked.
 
 5: If a security failure occurs, the last line of defense will trigger emergency measures.
-

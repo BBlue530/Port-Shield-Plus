@@ -1,9 +1,7 @@
 import os
 import time
-from Variables import BLOCK_DURATION
+from Variables import BLOCK_DURATION, ip_last_blocked
 from IPLogger import logger
-
-ip_last_blocked = {}
 
 def block_ip(ip):
     current_time = time.time()
@@ -19,7 +17,7 @@ def block_ip(ip):
 
 
     # VVV Comment these lines out for block to be perma VVV
-    time.sleep(BLOCK_DURATION)
-    os.system(f"sudo iptables -D INPUT -s {ip} -j DROP")
-    message = f"[i] Unblock IP: {ip} after: {BLOCK_DURATION} seconds."
-    logger(message)
+    #time.sleep(BLOCK_DURATION)
+    #os.system(f"sudo iptables -D INPUT -s {ip} -j DROP")
+    #message = f"[i] Unblock IP: {ip} after: {BLOCK_DURATION} seconds."
+    #logger(message)
